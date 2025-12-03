@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>立夏 · 节气食光</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-light: #ffc0cb;
+            --pink-main: #ffb6c1;
+            --pink-dark: #d4a5a5;
+            --green-light: #f0fff4;
+            --green-main: #98d8c8;
+            --green-accent: #90ee90;
+            --yellow-cream: #fff8dc;
+            --bg-cream: #fffef9;
+            --text-dark: #5d4037;
+            --text-brown: #6d4c41;
+            --text-light: #8d6e63;
+            --text-muted: #90a4ae;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+            background: linear-gradient(180deg, var(--bg-cream) 0%, #fff5f7 50%, var(--green-light) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* 背景装饰 */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255,182,193,0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(144,238,144,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+        .decor-1 { top: 15%; right: 10%; font-size: 2rem; opacity: 0.4; }
+        .decor-2 { top: 45%; left: 5%; font-size: 1.5rem; opacity: 0.3; animation-delay: 1s; animation-duration: 8s; }
+        .decor-3 { bottom: 20%; right: 8%; font-size: 2.5rem; opacity: 0.25; animation-delay: 2s; animation-duration: 7s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        /* 音效按钮 */
+        .sound-btn {
+            position: fixed;
+            top: 20px; right: 20px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+        .sound-btn:hover { transform: scale(1.1); }
+
+        /* 首屏 */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 24px 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .greeting-box {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 1s ease-out 0.3s forwards;
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .season-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(90deg, var(--pink-main) 0%, var(--pink-light) 100%);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #fff;
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pink-dark) 0%, var(--pink-main) 50%, var(--green-main) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 8px;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            letter-spacing: 4px;
+            margin-bottom: 24px;
+        }
+
+        .greeting-text {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.25rem;
+            line-height: 2;
+            color: var(--text-brown);
+            padding: 20px 0;
+        }
+
+        .quote-mark {
+            font-family: Georgia, serif;
+            font-size: 2rem;
+            color: var(--pink-main);
+            opacity: 0.6;
+        }
+
+        /* 立夏人物形象 */
+        .character-area {
+            margin-top: 30px;
+            opacity: 0;
+            animation: slideUp 1s ease-out 0.6s forwards;
+        }
+
+        .character-image {
+            width: 220px;
+            height: auto;
+            filter: drop-shadow(0 15px 30px rgba(255,182,193,0.35));
+            animation: gentleFloat 4s ease-in-out infinite;
+            /* 确保透明背景融合 */
+            background: transparent;
+            mix-blend-mode: normal;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .character-bubble {
+            display: inline-block;
+            background: rgba(255,255,255,0.95);
+            padding: 12px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(255,182,193,0.2);
+            max-width: 300px;
+            margin-top: 16px;
+            margin-bottom: 60px; /* 增加底部间距，避免与滚动提示重叠 */
+            position: relative;
+        }
+
+        .character-bubble::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid rgba(255,255,255,0.95);
+        }
+
+        .bubble-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            opacity: 0;
+            animation: bounce 2s ease-in-out infinite, fadeIn 1s ease-out 1.2s forwards;
+            z-index: 5;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .scroll-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .scroll-arrow {
+            font-size: 1.2rem;
+            color: var(--pink-main);
+            margin-top: 8px;
+        }
+
+        /* 食谱区 */
+        .recipe-section {
+            padding: 60px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-icon { font-size: 2rem; margin-bottom: 12px; }
+
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.75rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .recipe-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .recipe-card {
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .recipe-card.visible { animation: slideUp 0.6s ease-out forwards; }
+
+        .recipe-card:nth-child(1) { background: linear-gradient(135deg, #fff5f5 0%, #fff 100%); animation-delay: 0.1s; }
+        .recipe-card:nth-child(2) { background: linear-gradient(135deg, #f0fff4 0%, #fff 100%); animation-delay: 0.2s; }
+        .recipe-card:nth-child(3) { background: linear-gradient(135deg, #fffbeb 0%, #fff 100%); animation-delay: 0.3s; }
+        .recipe-card:nth-child(4) { background: linear-gradient(135deg, #fef3e2 0%, #fff 100%); animation-delay: 0.4s; }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(255,182,193,0.2);
+        }
+
+        .recipe-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .recipe-card:hover::after { left: 100%; }
+
+        .recipe-image-box {
+            width: 80px; height: 80px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .recipe-thumb {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            bottom: -4px; right: -4px;
+            font-size: 0.6rem;
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .recipe-info { flex: 1; }
+
+        .recipe-name {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .recipe-desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .recipe-meta { display: flex; gap: 12px; }
+        .meta-item { font-size: 0.75rem; color: var(--text-muted); }
+
+        .tip-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 30px;
+            max-width: 360px;
+            margin: 24px auto 0;
+        }
+
+        .tip-icon { font-size: 1rem; }
+        .tip-text { font-size: 0.8rem; color: var(--text-light); }
+
+        /* 知识卡片 */
+        .knowledge-section {
+            padding: 40px 20px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .knowledge-card {
+            max-width: 360px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #fff 0%, #fff5f7 100%);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(255,182,193,0.15);
+        }
+
+        .knowledge-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .knowledge-avatar {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(255,182,193,0.3);
+        }
+
+        .knowledge-avatar img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .knowledge-title-box { flex: 1; }
+
+        .knowledge-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .knowledge-from {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .knowledge-content { line-height: 2; }
+
+        .knowledge-para {
+            font-size: 0.95rem;
+            color: var(--text-brown);
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, rgba(255,182,193,0.3) 60%);
+            padding: 0 4px;
+        }
+
+        .knowledge-decor {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            opacity: 0.4;
+        }
+
+        /* 文化折叠区 */
+        .culture-section {
+            padding: 40px 20px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .accordion-list {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .accordion-item {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .accordion-header:hover,
+        .accordion-header.active {
+            background: linear-gradient(90deg, #fce4ec 0%, #fff 100%);
+        }
+
+        .accordion-title {
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .accordion-arrow {
+            font-size: 0.8rem;
+            color: var(--pink-main);
+            transition: transform 0.3s;
+        }
+
+        .accordion-header.active .accordion-arrow {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            background: #fff;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .accordion-content.active {
+            max-height: 300px;
+            padding: 16px 20px;
+        }
+
+        .accordion-text {
+            font-size: 0.9rem;
+            color: var(--text-brown);
+            line-height: 1.8;
+        }
+
+        /* 底部 */
+        .footer {
+            padding: 60px 20px 40px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,182,193,0.1) 100%);
+            z-index: 10;
+        }
+
+        .footer-character {
+            width: 120px;
+            opacity: 0.6;
+            margin-bottom: 16px;
+        }
+
+        .footer-quote {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .footer-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pink-main), transparent);
+            margin: 0 auto 24px;
+        }
+
+        .footer-brand {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .footer-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* 弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            position: relative;
+            animation: modalSlideUp 0.3s ease-out;
+            margin: 20px 0;
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: #f5f5f5;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: #eee;
+            color: var(--text-dark);
+        }
+
+        .modal-image-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff5f7 0%, var(--green-light) 100%);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-header { margin-bottom: 20px; }
+
+        .modal-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .modal-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .meta-card {
+            background: linear-gradient(135deg, #fff5f7 0%, var(--green-light) 100%);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .meta-label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .modal-section { margin-bottom: 24px; }
+
+        .modal-section-title {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #fce4ec;
+            font-weight: 500;
+        }
+
+        /* 营养成分表格 */
+        .nutrition-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+        }
+
+        .nutrition-table th {
+            background: linear-gradient(90deg, #fff5f7, var(--green-light));
+            padding: 10px 6px;
+            text-align: left;
+            font-weight: 500;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--pink-light);
+        }
+
+        .nutrition-table td {
+            padding: 10px 6px;
+            border-bottom: 1px solid #f5f5f5;
+            color: var(--text-brown);
+        }
+
+        .nutrition-table tr:last-child td {
+            border-bottom: none;
+            font-weight: 500;
+            background: rgba(255,182,193,0.1);
+        }
+
+        .nutrition-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .nutrition-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .nutrition-bar-fill {
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+
+        .nutrition-bar-fill.protein { background: linear-gradient(90deg, #ff9a9e, #fecfef); }
+        .nutrition-bar-fill.carbs { background: linear-gradient(90deg, #a8edea, #fed6e3); }
+        .nutrition-bar-fill.fat { background: linear-gradient(90deg, #ffecd2, #fcb69f); }
+
+        .nutrition-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .ingredient-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ingredient-tag {
+            background: var(--green-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #66bb6a;
+        }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink-main) 0%, var(--pink-light) 100%);
+            color: #fff;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 0.9rem;
+            color: var(--text-brown);
+            line-height: 1.6;
+            padding-top: 2px;
+        }
+
+        .modal-tip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(90deg, #fff5f7 0%, var(--bg-cream) 100%);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .modal-tip-icon { font-size: 1.2rem; }
+
+        /* 响应式 */
+        @media (max-width: 380px) {
+            .hero-title { font-size: 3rem; letter-spacing: 4px; }
+            .greeting-text { font-size: 1.1rem; }
+            .character-image { width: 180px; }
+            .recipe-card { padding: 16px; }
+            .recipe-image-box { width: 70px; height: 70px; }
+            .modal-meta { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="floating-decor decor-1">🍃</div>
+    <div class="floating-decor decor-2">🌸</div>
+    <div class="floating-decor decor-3">🪷</div>
+
+    <button class="sound-btn" id="soundBtn">🔇</button>
+
+    <!-- 首屏 -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="greeting-box">
+                <div class="season-tag">二十四节气 · 第七</div>
+                <h1 class="hero-title">立夏</h1>
+                <p class="hero-subtitle">荷间司膳 · 节气小厨娘</p>
+                <div class="greeting-text">
+                    <span class="quote-mark">"</span>
+                    立夏到了，<br>我陪你好好吃饭~
+                    <span class="quote-mark">"</span>
+                </div>
+            </div>
+
+            <div class="character-area">
+                <img src="lixia-character.png" alt="立夏" class="character-image">
+                <div class="character-bubble">
+                    <span class="bubble-text" id="randomQuote">食材睡着的时候，我要轻轻叫醒它们哦~</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-hint">
+            <span class="scroll-text">下滑查看今日食谱</span>
+            <div class="scroll-arrow">↓</div>
+        </div>
+    </section>
+
+    <!-- 食谱区 -->
+    <section class="recipe-section">
+        <div class="section-header">
+            <div class="section-icon">🌿</div>
+            <h2 class="section-title">立夏尝三鲜</h2>
+            <p class="section-subtitle">夏安好时节，四道时令美味</p>
+        </div>
+
+        <div class="recipe-grid">
+            <div class="recipe-card" data-recipe="1">
+                <div class="recipe-image-box">
+                    <img src="recipe-wusefan-1.png" alt="五色饭" class="recipe-thumb">
+                    <div class="difficulty-badge">🍃</div>
+                </div>
+                <div class="recipe-info">
+                    <h3 class="recipe-name">立夏五色饭</h3>
+                    <p class="recipe-desc">红豆跳进糯米被子，黄豆在梅雨前翻了个身~</p>
+                    <div class="recipe-meta">
+                        <span class="meta-item">⏱ 30分钟</span>
+                        <span class="meta-item">🔥 890.5千卡</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-card" data-recipe="2">
+                <div class="recipe-image-box">
+                    <img src="recipe-lianzitang-1.png" alt="莲子清心汤" class="recipe-thumb">
+                    <div class="difficulty-badge">🍃🍃</div>
+                </div>
+                <div class="recipe-info">
+                    <h3 class="recipe-name">莲子清心汤</h3>
+                    <p class="recipe-desc">夏安，要像荷花一样舒展呀！</p>
+                    <div class="recipe-meta">
+                        <span class="meta-item">⏱ 50分钟</span>
+                        <span class="meta-item">🔥 326.1千卡</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-card" data-recipe="3">
+                <div class="recipe-image-box">
+                    <img src="recipe-fenzhengrou.png" alt="荷香粉蒸肉" class="recipe-thumb">
+                    <div class="difficulty-badge">🍃🍃🍃</div>
+                </div>
+                <div class="recipe-info">
+                    <h3 class="recipe-name">荷香莲藕粉蒸肉</h3>
+                    <p class="recipe-desc">荷叶包着的"荷包盲盒"，咬下去是夏天的味道~</p>
+                    <div class="recipe-meta">
+                        <span class="meta-item">⏱ 90分钟</span>
+                        <span class="meta-item">🔥 2122.5千卡</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-card" data-recipe="4">
+                <div class="recipe-image-box">
+                    <img src="recipe-xiangchun-1.png" alt="香椿拌蚕豆" class="recipe-thumb">
+                    <div class="difficulty-badge">🍃</div>
+                </div>
+                <div class="recipe-info">
+                    <h3 class="recipe-name">香椿拌蚕豆</h3>
+                    <p class="recipe-desc">你看，蚕豆裂开的口子，像不像夏天在微笑？</p>
+                    <div class="recipe-meta">
+                        <span class="meta-item">⏱ 15分钟</span>
+                        <span class="meta-item">🔥 123千卡</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <span class="tip-icon">💡</span>
+            <span class="tip-text">点击卡片查看详细食谱，所有食材超市均可购买哦~</span>
+        </div>
+    </section>
+
+    <!-- 知识卡片 -->
+    <section class="knowledge-section">
+        <div class="knowledge-card">
+            <div class="knowledge-header">
+                <div class="knowledge-avatar">
+                    <img src="lixia-character.png" alt="立夏">
+                </div>
+                <div class="knowledge-title-box">
+                    <h3 class="knowledge-title">立夏养心小知识</h3>
+                    <span class="knowledge-from">—— 立夏悄悄告诉你</span>
+                </div>
+            </div>
+            <div class="knowledge-content">
+                <p class="knowledge-para"><span class="highlight">立夏养心宜清淡</span>，多食苦味清心火</p>
+                <p class="knowledge-para">莲子、苦瓜皆良品，<span class="highlight">红色食物养心血</span></p>
+                <p class="knowledge-para">午时小憩养精神，<span class="highlight">心静自然凉</span></p>
+            </div>
+            <div class="knowledge-decor">
+                <span>🪷</span><span>🌿</span><span>🪷</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 文化折叠区 -->
+    <section class="culture-section">
+        <div class="section-header">
+            <div class="section-icon">📚</div>
+            <h2 class="section-title">节气文化</h2>
+            <p class="section-subtitle">了解更多立夏的故事</p>
+        </div>
+
+        <div class="accordion-list">
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span class="accordion-title">📜 节气由来</span>
+                    <span class="accordion-arrow">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="accordion-text">立夏是二十四节气中第7个节气、夏季首个节气，标志孟夏时节正式开启。《历书》记载"斗指东南，维为立夏"，当太阳到达黄经45°时交节，公历每年5月5日—7日迎来立夏。《月令七十二候集解》提到"立，建始也；夏，假也，物至此时皆假大也"，意为春日植物至此已长大繁茂。</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span class="accordion-title">🏮 尝新食俗</span>
+                    <span class="accordion-arrow">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="accordion-text">江南有"立夏见三新"（樱桃、青梅、麦子），先祭祖再尝鲜；还有吃"五色饭"（赤豆、黄豆等拌粳米）、乌米饭的习惯。部分地区尝"地三鲜"（苋菜、蚕豆等）、"树三鲜"（樱桃、梅子等）、"水三鲜"（鲥鱼、鲳鱼、黄鱼）。</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span class="accordion-title">🥚 斗蛋习俗</span>
+                    <span class="accordion-arrow">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="accordion-text">立夏日，家家户户煮"立夏蛋"，孩子们将蛋装进网兜挂在脖子上，还会两两斗蛋——以蛋相击，不破者为胜。民间相传吃蛋可防"疰夏"（夏季疲劳消瘦），寓意平安度夏。正如立夏所说："没有一颗蛋该在斗蛋中孤单！"</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span class="accordion-title">💆 养生要点</span>
+                    <span class="accordion-arrow">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="accordion-text">立夏养生重在"养心"。宜清淡饮食，多食苦味清心火，如苦瓜、莲子心；多吃红色食物养心血，如番茄、红枣；保持午休习惯，子午觉最养心；情绪宜平和，"心静自然凉"。</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span class="accordion-title">📖 诗词欣赏</span>
+                    <span class="accordion-arrow">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="accordion-text">「四月清和雨乍晴，南山当户转分明。更无柳絮因风起，惟有葵花向日倾。」——司马光《客中初夏》</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <img src="lixia-character.png" alt="立夏" class="footer-character">
+        <p class="footer-quote">「暑气是慢炖出来的温柔呀~」</p>
+        <div class="footer-divider"></div>
+        <p class="footer-brand">节气食光 · 立夏 🪷</p>
+        <p class="footer-hint">再次触碰冰箱贴，随时回来看我</p>
+    </footer>
+
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="recipeModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            
+            <div class="modal-image-container">
+                <img src="" alt="" class="modal-image" id="modalImage">
+            </div>
+
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-desc" id="modalDesc"></p>
+            </div>
+
+            <div class="modal-meta" id="modalMeta"></div>
+
+            <div class="modal-section">
+                <h3 class="modal-section-title">📊 营养成分表</h3>
+                <table class="nutrition-table" id="nutritionTable"></table>
+                <div class="nutrition-bar" id="nutritionBar"></div>
+            </div>
+
+            <div class="modal-section">
+                <h3 class="modal-section-title">🥬 食材清单</h3>
+                <div class="ingredient-list" id="ingredientList"></div>
+            </div>
+
+            <div class="modal-section">
+                <h3 class="modal-section-title">🍳 厨具准备</h3>
+                <div class="ingredient-list" id="toolsList"></div>
+            </div>
+
+            <div class="modal-section">
+                <h3 class="modal-section-title">👩‍🍳 制作步骤</h3>
+                <div class="step-list" id="stepList"></div>
+            </div>
+
+            <div class="modal-tip">
+                <span class="modal-tip-icon">🪷</span>
+                <span id="modalTip"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const recipes = {
+            1: {
+                name: '立夏五色饭',
+                image: 'recipe-wusefan-1.png',
+                desc: '五色饭是江南立夏传统美食，以赤豆、黄豆、黑豆、青豆、粳米为主料，色彩缤纷寓意五谷丰登。',
+                time: '30分钟', serves: '2-3人份', difficulty: '简单',
+                nutrition: {
+                    protein: { value: '25.8g', note: '不含腊肉时' },
+                    carbs: { value: '148.6g', note: '主要来自粳米和豆类' },
+                    fat: { value: '17.9g', note: '不含猪油时' },
+                    calories: { value: '890.5千卡', note: '含腊肉猪油为1249.6千卡' }
+                },
+                ingredients: ['粳米 150g', '赤豆 20g', '黄豆 20g', '黑豆 20g', '青豆 20g', '胡萝卜 50g', '腊肉 50g（可选）', '食用油 适量', '生抽 2汤匙', '盐 少许', '猪油 1汤匙（可选）'],
+                tools: ['电饭煲', '炒锅', '碗'],
+                steps: ['将粳米淘洗干净后，用清水浸泡30分钟', '胡萝卜、腊肉切丁；青豆洗净备用', '锅中放少许油，先下入腊肉，用中小火煸炒出香味和油脂', '接着倒入赤豆、黄豆、黑豆、青豆、胡萝卜继续翻炒2分钟', '将泡好并沥干水分的米倒入锅中，与所有配料一起翻炒均匀', '加入生抽和适量的盐（注意腊肉有咸味），翻炒至米粒均匀上色', '将炒好的所有材料转入电饭煲，加入比平时煮饭略少一点的水', '按下煮饭键，饭煮好后趁热拌入一勺猪油，撒上葱花即可享用'],
+                tip: '五色饭寓意五谷丰登，立夏食用可健脾养胃，很适合这个季节哦~'
+            },
+            2: {
+                name: '莲子清心汤',
+                image: 'recipe-lianzitang-1.png',
+                desc: '莲子清心汤是立夏养心佳品，以莲子、麦冬、百合等食材慢炖而成，清甜滋润，最适合夏日清心养神。',
+                time: '50分钟', serves: '2-3人份', difficulty: '中等',
+                nutrition: {
+                    protein: { value: '10.8g', note: '来自莲子、赤小豆、小米等' },
+                    carbs: { value: '68.3g', note: '核心来自红枣、小米、莲子' },
+                    fat: { value: '1.5g', note: '低脂健康' },
+                    calories: { value: '326.1千卡', note: '加10g冰糖增加约40千卡' }
+                },
+                ingredients: ['莲子 15g', '麦冬 10g', '百合 10g', '红枣 5颗', '小米 20g', '赤小豆 10g', '冰糖 适量（可选）'],
+                tools: ['砂锅（推荐）', '不锈钢汤锅', '或电压力锅'],
+                steps: ['莲子若带芯可保留（芯有清心作用），与赤小豆提前浸泡1小时', '麦冬、百合用温水快速冲洗，红枣剪开去核备用', '将浸泡好的赤小豆、莲子，以及麦冬、红枣、小米放入砂锅', '加入足量清水（没过食材3-4厘米），大火煮沸', '撇去浮沫后转小火，盖上锅盖慢炖40-50分钟', '最后10分钟放入百合，继续小火煮至百合变软透明', '此时小米已开花，赤小豆和莲子也已煮烂', '可根据口味加入少许冰糖，搅拌融化后关火，静置5分钟即可'],
+                tip: '莲子清心降火，百合润肺安神，这道汤很适合立夏养心清热~'
+            },
+            3: {
+                name: '荷香莲藕粉蒸肉',
+                image: 'recipe-fenzhengrou.png',
+                desc: '荷叶包裹的粉蒸肉是立夏经典，五花肉配上清甜莲藕，用荷叶蒸制后香气四溢，软糯入味。',
+                time: '90分钟', serves: '3-4人份', difficulty: '创新',
+                nutrition: {
+                    protein: { value: '65.8g', note: '主要来自五花肉和米粉' },
+                    carbs: { value: '75.2g', note: '来自蒸肉米粉和莲藕' },
+                    fat: { value: '170.9g', note: '核心来自带皮五花肉' },
+                    calories: { value: '2122.5千卡', note: '脂肪贡献超80%热量' }
+                },
+                ingredients: ['带皮五花肉 400-500g', '莲藕 1节', '干荷叶 1-2张', '蒸肉米粉 50g', '生姜 3-4片', '葱 1段', '料酒 1汤匙', '生抽 2汤匙', '蚝油 半勺', '白糖 1小勺', '老抽 半汤匙'],
+                tools: ['蒸锅', '炒锅', '深碗', '保鲜膜', '盘子'],
+                steps: ['五花肉切厚片，加入姜末、葱末、生抽、老抽、料酒、蚝油、白糖', '用手充分抓匀，盖保鲜膜腌制至少30分钟（1小时以上更入味）', '荷叶用沸水泡软，莲藕去皮切厚片，放入清水浸泡防氧化', '将蒸肉粉倒入大盘，每片腌好的五花肉两面均匀沾上粉', '取泡软的荷叶，光面朝上，先在底部铺上藕片', '将五花肉片整齐地码在莲藕片上', '淋上几汤匙清水或高汤，让粉蒸肉更湿润', '用荷叶包裹成"荷包"，大火蒸30分钟，转小火蒸1小时即可'],
+                tip: '荷叶清香可解腻，莲藕吸收肉汁更美味，这是夏天最地道的味道~'
+            },
+            4: {
+                name: '香椿拌蚕豆',
+                image: 'recipe-xiangchun-1.png',
+                desc: '香椿拌蚕豆是立夏时节的清爽小菜，香椿的独特香气配上软糯的蚕豆，清新可口，营养丰富。',
+                time: '15分钟', serves: '2人份', difficulty: '简单',
+                nutrition: {
+                    protein: { value: '5.9g', note: '主要来自蚕豆' },
+                    carbs: { value: '18.9g', note: '核心来自蚕豆' },
+                    fat: { value: '5.4g', note: '主要来自香油' },
+                    calories: { value: '123千卡', note: '低热量健康小菜' }
+                },
+                ingredients: ['蚕豆 200g', '香椿 50g', '盐 少许', '香油 1勺'],
+                tools: ['煮锅', '大碗', '菜刀'],
+                steps: ['将蚕豆剥壳，用清水冲洗干净', '香椿摘去老梗，保留嫩叶，洗干净', '煮锅加足量清水，大火烧开后放入蚕豆', '转中火煮8-10分钟，直至蚕豆可以轻松扎透', '捞出蚕豆放入凉水中过凉，沥干水分备用', '再次烧开水，放入香椿焯烫30秒-1分钟至深绿', '捞出香椿过凉水降温，挤干水分，切成碎末', '将蚕豆和香椿放入大碗，加盐和香油充分搅拌均匀即可'],
+                tip: '香椿焯水可去除亚硝酸盐，蚕豆富含蛋白质，这道菜清爽又营养~'
+            }
+        };
+
+        const quotes = ["食材睡着的时候，我要轻轻叫醒它们哦~", "没有一颗蛋该在斗蛋中孤单！", "暑气是慢炖出来的温柔呀~", "你看，蚕豆裂开的口子，像不像夏天在微笑？"];
+        document.getElementById('randomQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+        const soundBtn = document.getElementById('soundBtn');
+        let soundOn = false;
+        soundBtn.addEventListener('click', () => { soundOn = !soundOn; soundBtn.textContent = soundOn ? '🔊' : '🔇'; });
+
+        const recipeCards = document.querySelectorAll('.recipe-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.2 });
+        recipeCards.forEach(card => observer.observe(card));
+
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const isActive = header.classList.contains('active');
+                accordionHeaders.forEach(h => { h.classList.remove('active'); h.nextElementSibling.classList.remove('active'); });
+                if (!isActive) { header.classList.add('active'); header.nextElementSibling.classList.add('active'); }
+            });
+        });
+
+        const modal = document.getElementById('recipeModal');
+        const modalClose = document.getElementById('modalClose');
+
+        recipeCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const recipe = recipes[card.dataset.recipe];
+                
+                document.getElementById('modalImage').src = recipe.image;
+                document.getElementById('modalImage').alt = recipe.name;
+                document.getElementById('modalTitle').textContent = recipe.name;
+                document.getElementById('modalDesc').textContent = recipe.desc;
+                
+                document.getElementById('modalMeta').innerHTML = `
+                    <div class="meta-card"><span class="meta-label">⏱ 时间</span><span class="meta-value">${recipe.time}</span></div>
+                    <div class="meta-card"><span class="meta-label">👤 份量</span><span class="meta-value">${recipe.serves}</span></div>
+                    <div class="meta-card"><span class="meta-label">📊 难度</span><span class="meta-value">${recipe.difficulty}</span></div>
+                `;
+
+                document.getElementById('nutritionTable').innerHTML = `
+                    <tr><th>营养成分</th><th>含量</th><th>备注</th></tr>
+                    <tr><td>💪 蛋白质</td><td>${recipe.nutrition.protein.value}</td><td>${recipe.nutrition.protein.note}</td></tr>
+                    <tr><td>🍚 碳水化合物</td><td>${recipe.nutrition.carbs.value}</td><td>${recipe.nutrition.carbs.note}</td></tr>
+                    <tr><td>🥑 脂肪</td><td>${recipe.nutrition.fat.value}</td><td>${recipe.nutrition.fat.note}</td></tr>
+                    <tr><td>🔥 总热量</td><td>${recipe.nutrition.calories.value}</td><td>${recipe.nutrition.calories.note}</td></tr>
+                `;
+
+                const p = parseFloat(recipe.nutrition.protein.value), c = parseFloat(recipe.nutrition.carbs.value), f = parseFloat(recipe.nutrition.fat.value), t = p + c + f;
+                document.getElementById('nutritionBar').innerHTML = `
+                    <div class="nutrition-item"><div class="nutrition-bar-fill protein" style="width:${p/t*100}%"></div><div class="nutrition-label">蛋白质 ${Math.round(p/t*100)}%</div></div>
+                    <div class="nutrition-item"><div class="nutrition-bar-fill carbs" style="width:${c/t*100}%"></div><div class="nutrition-label">碳水 ${Math.round(c/t*100)}%</div></div>
+                    <div class="nutrition-item"><div class="nutrition-bar-fill fat" style="width:${f/t*100}%"></div><div class="nutrition-label">脂肪 ${Math.round(f/t*100)}%</div></div>
+                `;
+                
+                document.getElementById('ingredientList').innerHTML = recipe.ingredients.map(i => `<span class="ingredient-tag">${i}</span>`).join('');
+                document.getElementById('toolsList').innerHTML = recipe.tools.map(i => `<span class="ingredient-tag" style="background:#fff5f7;color:#e91e63">${i}</span>`).join('');
+                document.getElementById('stepList').innerHTML = recipe.steps.map((s,i) => `<div class="step-item"><span class="step-num">${i+1}</span><span class="step-text">${s}</span></div>`).join('');
+                document.getElementById('modalTip').textContent = recipe.tip;
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        modalClose.addEventListener('click', () => { modal.classList.remove('active'); document.body.style.overflow = ''; });
+        modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.remove('active'); document.body.style.overflow = ''; } });
+    </script>
+</body>
+</html>
